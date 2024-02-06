@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            height: 100%;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+            color: #333;
+            background-image: url('/fundo.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        header {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #2980b9;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 600px; /* Ajuste a largura máxima da postagem conforme necessário */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 50px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .post {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .author-info {
+            flex-grow: 1;
+        }
+
+        .post-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .post-content {
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .comments {
+            margin-top: 20px;
+        }
+
+        .comment {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .comment-author {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 5px;
+            overflow: hidden;
+        }
+
+        .comment-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .comment-info {
+            flex-grow: 1;
+        }
+
+        .add-post-form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .form-group button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <title>Postagens</title>
+</head>
+<body>
+    <header>
+        <h1>Postagens</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="contato.html">Contato</a></li>
+            <li><a href="postagens.html">Postagens</a></li>
+            <li><a href="admin.html">Admin</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" id="post-container">
+        <!-- Local onde as postagens serão exibidas -->
+    </div>
+
+    <div class="add-post-form">
+        <h2>Adicionar Nova Postagem</h2>
+        <div class="form-group">
+            <label for="post-title">Título:</label>
+            <input type="text" id="post-title" placeholder="Digite o título da postagem">
+        </div>
+        <div class="form-group">
+            <label for="post-content">Conteúdo:</label>
+            <textarea id="post-content" placeholder="Digite o conteúdo da postagem"></textarea>
+        </div>
+        <div class="form-group">
+            <button onclick="adicionarPostagem()">Adicionar Postagem</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chama esta função quando o documento é carregado
+
+            // Obtém o contêiner de postagens
+            const postContainer = document.getElementById('post-container');
+
+            // Exibe postagens armazenadas localmente quando a página é carregada
+            exibirPostagensArmazenadas();
+        });
+
+        function exibirPostagensArmazenadas() {
+            // Obtém as postagens armazenadas localmente
+            const postagens = JSON.parse(localStorage.getItem('postagens')) || [];
+
+            // Limpa o contêiner antes de exibir as postagens
+            const postContainer = document.getElementById('post-container');
+            postContainer.innerHTML = '';
+
+            // Exibe cada postagem no contêiner
+            postagens.forEach(postagem => {
+                const postElement = criarElementoDePostagem(postagem);
+                postContainer.appendChild(postElement);
+            });
+        }
+
+        function adicionarPostagem() {
+            // Obtém o título e o conteúdo da postagem do formulário
+            const titulo = document.getElementById('post-title').value;
+            const conteudo = document.getElementById('post-content').value;
+
+            // Verifica se o título e o conteúdo não estão vazios
+            if (titulo.trim() === '' || conteudo.trim() === '') {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            // Cria um objeto de postagem
+            const novaPostagem = {
+                titulo,
+                conteudo,
+                data: new Date().toLocaleDateString(),
+            };
+
+            // Obtém as postagens armazenadas localmente
+            const postagens = JSON.parse(localStorage.getItem('postagens')) || [];
+
+            // Adiciona a nova postagem à lista
+            postagens.push(novaPostagem);
+
+            // Armazena a lista atualizada localmente
+            localStorage.setItem('postagens', JSON.stringify(postagens));
+
+            // Exibe as postagens atualizadas
+            exibirPostagensArmazenadas();
+
+            // Limpa os campos do formulário
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-content').value = '';
+
+            alert('Postagem adicionada! Atualize a página para ver.');
+        }
+
+        function criarElementoDePostagem(postagem) {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+
+            const postAuthorElement = document.createElement('div');
+            postAuthorElement.classList.add('post-author');
+
+            const authorAvatarElement = document.createElement('div');
+            authorAvatarElement.classList.add('author-avatar');
+            const authorAvatarImgElement = document.createElement('img');
+            authorAvatarImgElement.src = 'fundo.jpg'; // Substitua pelo caminho correto
+            authorAvatarImgElement.alt = 'Avatar do Autor';
+            authorAvatarElement.appendChild(authorAvatarImgElement);
+
+            const authorInfoElement = document.createElement('div');
+            authorInfoElement.classList.add('author-info');
+
+            const autorElement = document.createElement('p');
+            autorElement.textContent = 'Autor: Ollyver Osório'; // Substitua pelo nome do autor ou dinamicamente
+            const dataElement = document.createElement('p');
+            dataElement.textContent = `Data da Postagem: ${postagem.data}`;
+            authorInfoElement.appendChild(autorElement);
+            authorInfoElement.appendChild(dataElement);
+
+            postAuthorElement.appendChild(authorAvatarElement);
+            postAuthorElement.appendChild(authorInfoElement);
+
+            const imgElement = document.createElement('img');
+            imgElement.src = 'post1.jpeg'; // Substitua pelo caminho correto
+            imgElement.alt = 'Imagem da Postagem';
+
+            const tituloElement = document.createElement('h2');
+            tituloElement.classList.add('post-title');
+            tituloElement.textContent = postagem.titulo;
+
+            const conteudoElement = document.createElement('p');
+            conteudoElement.classList.add('post-content');
+            conteudoElement.textContent = postagem.conteudo;
+
+            postElement.appendChild(postAuthorElement);
+            postElement.appendChild(imgElement);
+            postElement.appendChild(tituloElement);
+            postElement.appendChild(conteudoElement);
+
+            return postElement;
+        }
+    </script>
+</body>
+</html>
